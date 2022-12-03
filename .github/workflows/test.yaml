@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         features:
-          - color
+          - kotlinc
           - modern-shell-utils
         baseImage:
           - debian:latest

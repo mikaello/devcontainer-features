@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-echo "Activating feature 'modern-shell-utils'"
-
+echo "Activating feature 'kotlinc'"
 # Clean up
 rm -rf /var/lib/apt/lists/*
 
@@ -30,6 +29,18 @@ elif [ "${USERNAME}" = "none" ] || ! id -u ${USERNAME} >/dev/null 2>&1; then
 fi
 
 echo "Step 3, define helper functions"
+updaterc() {
+    if [ "${UPDATE_RC}" = "true" ]; then
+        echo "Updating /etc/bash.bashrc and /etc/zsh/zshrc..."
+        if [[ "$(cat /etc/bash.bashrc)" != *"$1"* ]]; then
+            echo -e "$1" >> /etc/bash.bashrc
+        fi
+        if [ -f "/etc/zsh/zshrc" ] && [[ "$(cat /etc/zsh/zshrc)" != *"$1"* ]]; then
+            echo -e "$1" >> /etc/zsh/zshrc
+        fi
+    fi
+}
+
 apt_get_update()
 {
     if [ "$(find /var/lib/apt/lists/* | wc -l)" = "0" ]; then
@@ -48,6 +59,7 @@ check_packages() {
 
 export DEBIAN_FRONTEND=noninteractive
 
+
 echo "Step 4, check if architecture is supported"
 architecture="$(uname -m)"
 if [ "${architecture}" != "amd64" ] && [ "${architecture}" != "x86_64" ] && [ "${architecture}" != "arm64" ] && [ "${architecture}" != "aarch64" ]; then
@@ -55,12 +67,27 @@ if [ "${architecture}" != "amd64" ] && [ "${architecture}" != "x86_64" ] && [ "$
     exit 1
 fi
 
+
 echo "Step 5, install packages"
-check_packages exa fd-find silversearcher-ag bat
 
-ln -s /usr/bin/fdfind /usr/local/bin/fd
-ln -s /usr/bin/batcat /usr/local/bin/bat
+# Install dependencies
+check_packages ca-certificates curl unzip
 
+# renovate: datasource=github-releases depName=pinterest/ktlint
+KTLINT_VERSION=0.47.1
+curl -sSfLO https://github.com/pinterest/ktlint/releases/download/${KTLINT_VERSION}/ktlint \
+  && chmod a+x ktlint \
+  && mv ktlint /usr/local/bin
+
+# renovate: datasource=github-releases depName=JetBrains/kotlin
+KOTLIN_VERSION=v1.7.21
+export KT_VERSION=$(echo $KOTLIN_VERSION | cut -c2-) \
+ && curl -sSfLo kotlinc.zip https://github.com/JetBrains/kotlin/releases/download/${KOTLIN_VERSION}/kotlin-compiler-${KT_VERSION}.zip \
+ && unzip kotlinc.zip -d /opt/ \
+ && rm kotlinc.zip
+
+updaterc "export KOTLINC_BIN_DIR=\"/opt/kotlinc/bin\""
+updaterc "if [[ \"\${PATH}\" != *\"\${KOTLINC_BIN_DIR}\"* ]]; then export PATH=\"\${PATH}:\${KOTLINC_BIN_DIR}\"; fi"
 
 # Clean up
 rm -rf /var/lib/apt/lists/*
