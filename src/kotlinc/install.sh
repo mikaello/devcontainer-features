@@ -86,8 +86,10 @@ export KT_VERSION=$(echo $KOTLIN_VERSION | cut -c2-) \
  && unzip kotlinc.zip -d /opt/ \
  && rm kotlinc.zip
 
+UPDATE_RC=true
 updaterc "export KOTLINC_BIN_DIR=\"/opt/kotlinc/bin\""
 updaterc "if [[ \"\${PATH}\" != *\"\${KOTLINC_BIN_DIR}\"* ]]; then export PATH=\"\${PATH}:\${KOTLINC_BIN_DIR}\"; fi"
+UPDATE_RC=false
 
 # Clean up
 rm -rf /var/lib/apt/lists/*
