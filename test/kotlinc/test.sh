@@ -42,7 +42,7 @@ echo $PATH
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
 check "version" ktlint --version
-check "version" /opt/kotlinc/bin/kotlinc -version
+check "version" kotlinc -version
 
 # Report results
 # If any of the checks above exited with a non-zero exit code, the test will fail.

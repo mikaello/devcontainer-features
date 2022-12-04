@@ -1,15 +1,17 @@
 {
-    "image": "mcr.microsoft.com/devcontainers/javascript-node:0-18",
-    "customizations": {
-        "vscode": {
-            "extensions": [
-                "mads-hartmann.bash-ide-vscode"
-            ]
-        }
-    },
-    "features": {
-        "ghcr.io/devcontainers/features/docker-in-docker:2": {}
-    },
-    "remoteUser": "node",
-    "postCreateCommand": "npm install -g @devcontainers/cli"
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:0-18",
+  "customizations": {
+    "vscode": {
+      "extensions": ["mads-hartmann.bash-ide-vscode"]
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/common-utils:1": {},
+    "ghcr.io/mikaello/devcontainer-features/kotlinc:latest": {},
+    "ghcr.io/mikaello/devcontainer-features/modern-shell-utils:latest": {}
+  },
+  "remoteUser": "node",
+  "postCreateCommand": "npm install -g @devcontainers/cli"
 }
