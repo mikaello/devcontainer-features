@@ -2,7 +2,7 @@
   "name": "kotlinc",
   "id": "kotlinc",
   "version": "1.0.0",
-  "description": "Kotlin compiler and linter",
+  "description": "Kotlin compiler and linter (requires Java)",
   "installsAfter": [
     "ghcr.io/devcontainers/features/common-utils:1",
     "ghcr.io/devcontainers/features/java:1"
