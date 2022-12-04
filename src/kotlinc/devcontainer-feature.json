@@ -3,20 +3,6 @@
   "id": "kotlinc",
   "version": "1.0.0",
   "description": "Kotlin compiler and linter",
-  "options": {
-    "kotlincVersion": {
-      "type": "string",
-      "enum": ["os-provided", "none"],
-      "default": "os-provided",
-      "description": "Select version of kotlinc."
-    },
-    "ktlintVersion": {
-      "type": "string",
-      "enum": ["os-provided", "none"],
-      "default": "os-provided",
-      "description": "Select version of ktlint."
-    }
-  },
   "installsAfter": [
     "ghcr.io/devcontainers/features/common-utils:1",
     "ghcr.io/devcontainers/features/java:1"
