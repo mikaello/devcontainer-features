@@ -1,25 +1,20 @@
-# Kotlinc
 
-Kotlin compiler and [ktlint](https://github.com/pinterest/ktlint).
+# kotlinc (kotlinc)
+
+Kotlin compiler and linter (requires Java)
 
 ## Example Usage
 
 ```json
 "features": {
-    "ghcr.io/devcontainers/features/java:1": {},
-    "ghcr.io/mikaello/devcontainer-features/kotlinc:0": {}
+    "ghcr.io/mikaello/devcontainer-features/kotlinc:1": {}
 }
 ```
 
-## Options
 
-| Options Id     | Description       | Type   | Default Value                     |
-| -------------- | ----------------- | ------ | --------------------------------- |
-| kotlincVersion | Version of Kotlin | string | latest (NB. with trailing `v`)    |
-| ktlintVersion  | Version of Ktlint | string | latest (NB. without trailing `v`) |
+
+
 
 ---
 
-_Note: This file was auto-generated from the
-[devcontainer-feature.json](https://github.com/devcontainers/feature-starter/blob/main/src/hello/devcontainer-feature.json).
-Add additional notes to a `NOTES.md`._
+_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/mikaello/devcontainer-features/blob/main/src/kotlinc/devcontainer-feature.json).  Add additional notes to a `NOTES.md`._
