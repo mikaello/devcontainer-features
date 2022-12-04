@@ -6,6 +6,7 @@ Kotlin compiler and [ktlint](https://github.com/pinterest/ktlint).
 
 ```json
 "features": {
+    "ghcr.io/devcontainers/features/java:1": {},
     "ghcr.io/mikaello/devcontainer-features/kotlinc:0": {}
 }
 ```
