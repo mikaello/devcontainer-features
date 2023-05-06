@@ -74,7 +74,7 @@ echo "Step 5, install packages"
 check_packages ca-certificates curl unzip
 
 # renovate: datasource=github-releases depName=pinterest/ktlint
-KTLINT_VERSION=0.48.2
+KTLINT_VERSION=0.49.0
 curl -sSfLO https://github.com/pinterest/ktlint/releases/download/${KTLINT_VERSION}/ktlint \
   && chmod a+x ktlint \
   && mv ktlint /usr/local/bin
