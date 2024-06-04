@@ -9,7 +9,7 @@ This repository is based on the
 
 Install the modern shell utilities:
 
-- [exa](https://the.exa.website/), _ls_ alternative
+- [eza](https://eza.rocks/), _ls_ alternative (previously [exa](https://github.com/ogham/exa) was bundled)
 - [fd](https://github.com/sharkdp/fd), _find_ alternative
 - [ag (The Silver Seacher)](https://github.com/ggreer/the_silver_searcher),
   _grep_ alternative

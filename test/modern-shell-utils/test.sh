@@ -8,7 +8,7 @@ source dev-container-features-test-lib
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
 check "version" ag --version
-check "version" exa --version
+check "version" eza --version
 check "version" fd --version
 check "version" bat --version
 
