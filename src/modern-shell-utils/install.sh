@@ -29,13 +29,6 @@ elif [ "${USERNAME}" = "none" ] || ! id -u ${USERNAME} >/dev/null 2>&1; then
     USERNAME=root
 fi
 
-echo "Step 2.5, add apt repo deb.gierens.de to get 'eza', to be removed when 'eza' is available in mainstream repo"
-
-mkdir -p /etc/apt/keyrings
-wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
-echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | tee /etc/apt/sources.list.d/gierens.list
-chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
-
 echo "Step 3, define helper functions"
 apt_get_update()
 {
@@ -61,6 +54,16 @@ if [ "${architecture}" != "amd64" ] && [ "${architecture}" != "x86_64" ] && [ "$
     echo "(!) Architecture $architecture unsupported"
     exit 1
 fi
+
+
+echo "Step 4.5, add apt repo deb.gierens.de to get 'eza'. To be removed when 'eza' is available in mainstream repo"
+check_packages ca-certificates gpg wget
+mkdir -p /etc/apt/keyrings
+wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
+echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | tee /etc/apt/sources.list.d/gierens.list
+chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
+apt-get update -y
+
 
 echo "Step 5, install packages"
 check_packages eza fd-find silversearcher-ag bat
