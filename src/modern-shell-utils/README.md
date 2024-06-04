@@ -7,7 +7,7 @@ A collection of modern shell utils
 
 ```json
 "features": {
-    "ghcr.io/mikaello/devcontainer-features/modern-shell-utils:1": {}
+    "ghcr.io/mikaello/devcontainer-features/modern-shell-utils:2": {}
 }
 ```
 
@@ -21,4 +21,4 @@ A collection of modern shell utils
 
 ---
 
-_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/mikaello/devcontainer-features/blob/main/src/modern-shell-utils/devcontainer-feature.json).  Add additional notes to a `NOTES.md`._
+_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/mikaello/devcontainer-features/blob/main/src/modern-shell-utils/devcontainer-feature.json).  Add additional notes to a [`NOTES.md`](./NOTES.md)._
