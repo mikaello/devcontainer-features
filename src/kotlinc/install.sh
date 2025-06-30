@@ -80,7 +80,7 @@ curl -sSfLO https://github.com/pinterest/ktlint/releases/download/${KTLINT_VERSI
   && mv ktlint /usr/local/bin
 
 # renovate: datasource=github-releases depName=JetBrains/kotlin
-KOTLIN_VERSION=v2.1.21
+KOTLIN_VERSION=v2.2.0
 export KT_VERSION=$(echo $KOTLIN_VERSION | cut -c2-) \
  && curl -sSfLo kotlinc.zip https://github.com/JetBrains/kotlin/releases/download/${KOTLIN_VERSION}/kotlin-compiler-${KT_VERSION}.zip \
  && unzip kotlinc.zip -d /opt/ \
