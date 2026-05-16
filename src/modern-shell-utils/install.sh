@@ -56,7 +56,7 @@ if [ "${architecture}" != "x86_64" ] && [ "${architecture}" != "aarch64" ]; then
 fi
 
 
-echo "Step 4.5, add apt repo deb.gierens.de to get 'eza'. To be removed when 'eza' is available in mainstream repo"
+echo "Step 5, add apt repo deb.gierens.de to get 'eza'. To be removed when 'eza' is available in mainstream repo"
 check_packages ca-certificates gpg wget
 mkdir -p /etc/apt/keyrings
 wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
@@ -65,11 +65,11 @@ chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
 apt-get update -y
 
 
-echo "Step 5, install packages"
+echo "Step 6, install packages"
 check_packages eza fd-find silversearcher-ag bat
 
-ln -s /usr/bin/fdfind /usr/local/bin/fd
-ln -s /usr/bin/batcat /usr/local/bin/bat
+ln -sf /usr/bin/fdfind /usr/local/bin/fd
+ln -sf /usr/bin/batcat /usr/local/bin/bat
 
 
 # Clean up
