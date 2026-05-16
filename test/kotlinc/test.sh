@@ -6,7 +6,7 @@ set -e
 rm -rf /var/lib/apt/lists/*
 
 if [ "$(id -u)" -ne 0 ]; then
-    echo -e 'Script must be run as root to be able to installe dependencies, changing to sudo when installing.'
+    echo -e 'Script must be run as root to be able to install dependencies, changing to sudo when installing.'
 fi
 
 apt_get_update() {
@@ -41,7 +41,7 @@ echo $PATH
 
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
-check "ktlint: ktlint --version'" ktlint --version
+check "ktlint: 'ktlint --version'" ktlint --version
 check "kotlinc: 'kotlinc --version'" kotlinc -version
 
 # Report results
