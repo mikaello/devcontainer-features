@@ -50,7 +50,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 echo "Step 4, check if architecture is supported"
 architecture="$(uname -m)"
-if [ "${architecture}" != "amd64" ] && [ "${architecture}" != "x86_64" ] && [ "${architecture}" != "arm64" ] && [ "${architecture}" != "aarch64" ]; then
+if [ "${architecture}" != "x86_64" ] && [ "${architecture}" != "aarch64" ]; then
     echo "(!) Architecture $architecture unsupported"
     exit 1
 fi
