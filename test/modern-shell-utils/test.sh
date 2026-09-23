@@ -7,10 +7,12 @@ source dev-container-features-test-lib
 
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
-check "version" ag --version
-check "version" eza --version
-check "version" fd --version
-check "version" bat --version
+check "eza" eza --version
+check "fd" fd --version
+check "ripgrep" rg --version
+check "ag compatibility command" ag --version
+check "ag simple search" bash -c 'printf "feature-check\n" | ag feature-check'
+check "bat" bat --version
 
 # Report results
 # If any of the checks above exited with a non-zero exit code, the test will fail.
