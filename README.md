@@ -17,7 +17,7 @@ Install the modern shell utilities:
 
 ### [`kotlinc`](src/kotlinc/README.md)
 
-Install _kotlinc_ and [_ktlint_](https://github.com/pinterest/ktlint).
+Install _kotlinc_ and [_ktlint_](https://github.com/ktlint/ktlint).
 
 **NB.** requires Java to work. Either use a base image with Java or add feature
 `ghcr.io/devcontainers/features/java:1`.

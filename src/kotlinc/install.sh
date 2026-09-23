@@ -1,97 +1,44 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
 echo "Activating feature 'kotlinc'"
-# Clean up
-rm -rf /var/lib/apt/lists/*
 
-echo "Step 1, check if user is root"
+echo "Step 1, check for root privileges"
 if [ "$(id -u)" -ne 0 ]; then
-    echo -e 'Script must be run as root. Use sudo, su, or add "USER root" to your Dockerfile before running this script.'
+    echo "This feature must be installed as root." >&2
     exit 1
 fi
 
-echo "Step 2, determine appropriate non-root user"
-if [ "${USERNAME}" = "auto" ] || [ "${USERNAME}" = "automatic" ]; then
-    USERNAME=""
-    POSSIBLE_USERS=("vscode" "node" "codespace" "$(awk -v val=1000 -F ":" '$3==val{print $1}' /etc/passwd)")
-    for CURRENT_USER in "${POSSIBLE_USERS[@]}"; do
-        if id -u "${CURRENT_USER}" >/dev/null 2>&1; then
-            USERNAME=${CURRENT_USER}
-            break
-        fi
-    done
-    if [ "${USERNAME}" = "" ]; then
-        USERNAME=root
-    fi
-elif [ "${USERNAME}" = "none" ] || ! id -u ${USERNAME} >/dev/null 2>&1; then
-    USERNAME=root
+. /etc/os-release
+echo "Step 2, check the distribution"
+if [[ "${ID}" != "debian" && "${ID}" != "ubuntu" ]]; then
+    echo "Unsupported distribution: ${PRETTY_NAME}. This feature requires Debian or Ubuntu." >&2
+    exit 1
 fi
-
-echo "Step 3, define helper functions"
-updaterc() {
-    if [ "${UPDATE_RC}" = "true" ]; then
-        echo "Updating /etc/bash.bashrc and /etc/zsh/zshrc..."
-        if [[ "$(cat /etc/bash.bashrc)" != *"$1"* ]]; then
-            echo -e "$1" >> /etc/bash.bashrc
-        fi
-        if [ -f "/etc/zsh/zshrc" ] && [[ "$(cat /etc/zsh/zshrc)" != *"$1"* ]]; then
-            echo -e "$1" >> /etc/zsh/zshrc
-        fi
-    fi
-}
-
-apt_get_update()
-{
-    if [ "$(find /var/lib/apt/lists/* | wc -l)" = "0" ]; then
-        echo "Running apt-get update..."
-        apt-get update -y
-    fi
-}
-
-# Checks if packages are installed and installs them if not
-check_packages() {
-    if ! dpkg -s "$@" > /dev/null 2>&1; then
-        apt_get_update
-        apt-get -y install --no-install-recommends "$@"
-    fi
-}
 
 export DEBIAN_FRONTEND=noninteractive
+echo "Step 3, install prerequisites"
+rm -rf /var/lib/apt/lists/*
+apt-get update -y
+apt-get install -y --no-install-recommends ca-certificates curl unzip
 
-
-echo "Step 4, check if architecture is supported"
-architecture="$(uname -m)"
-if [ "${architecture}" != "amd64" ] && [ "${architecture}" != "x86_64" ] && [ "${architecture}" != "arm64" ] && [ "${architecture}" != "aarch64" ]; then
-    echo "(!) Architecture $architecture unsupported"
-    exit 1
-fi
-
-
-echo "Step 5, install packages"
-
-# Install dependencies
-check_packages ca-certificates curl unzip
-
-# renovate: datasource=github-releases depName=pinterest/ktlint
+# renovate: datasource=github-releases depName=ktlint/ktlint
 KTLINT_VERSION=1.8.0
-curl -sSfLO https://github.com/pinterest/ktlint/releases/download/${KTLINT_VERSION}/ktlint \
-  && chmod a+x ktlint \
-  && mv ktlint /usr/local/bin
-
 # renovate: datasource=github-releases depName=JetBrains/kotlin
 KOTLIN_VERSION=v2.4.20
-export KT_VERSION=$(echo $KOTLIN_VERSION | cut -c2-) \
- && curl -sSfLo kotlinc.zip https://github.com/JetBrains/kotlin/releases/download/${KOTLIN_VERSION}/kotlin-compiler-${KT_VERSION}.zip \
- && unzip kotlinc.zip -d /opt/ \
- && rm kotlinc.zip
 
-UPDATE_RC=true
-updaterc "export KOTLINC_BIN_DIR=\"/opt/kotlinc/bin\""
-updaterc "if [[ \"\${PATH}\" != *\"\${KOTLINC_BIN_DIR}\"* ]]; then export PATH=\"\${PATH}:\${KOTLINC_BIN_DIR}\"; fi"
-UPDATE_RC=false
+install_dir="$(mktemp -d)"
+trap 'rm -rf "$install_dir"' EXIT
 
-# Clean up
+echo "Step 4, install ktlint ${KTLINT_VERSION}"
+curl -fsSL "https://github.com/ktlint/ktlint/releases/download/${KTLINT_VERSION}/ktlint" -o "${install_dir}/ktlint"
+install -m 755 "${install_dir}/ktlint" /usr/local/bin/ktlint
+
+echo "Step 5, install Kotlin ${KOTLIN_VERSION}"
+kotlin_number="${KOTLIN_VERSION#v}"
+curl -fsSL "https://github.com/JetBrains/kotlin/releases/download/${KOTLIN_VERSION}/kotlin-compiler-${kotlin_number}.zip" -o "${install_dir}/kotlinc.zip"
+unzip -oq "${install_dir}/kotlinc.zip" -d /opt/
+
+echo "Step 6, clean up"
 rm -rf /var/lib/apt/lists/*
-
 echo "Done!"

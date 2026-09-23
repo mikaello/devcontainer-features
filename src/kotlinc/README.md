@@ -1,7 +1,9 @@
 
 # kotlinc (kotlinc)
 
-Kotlin compiler and linter (requires Java)
+Kotlin compiler and ktlint (requires Java; Debian and Ubuntu)
+
+The compiler is available on `PATH` in interactive and noninteractive processes.
 
 ## Example Usage
 
