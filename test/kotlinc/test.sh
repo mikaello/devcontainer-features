@@ -43,6 +43,7 @@ echo $PATH
 # The 'check' command comes from the dev-container-features-test-lib.
 check "ktlint: 'ktlint --version'" ktlint --version
 check "kotlinc: 'kotlinc --version'" kotlinc -version
+check "kotlinc on PATH for noninteractive shells" sh -c 'command -v kotlinc'
 
 # Report results
 # If any of the checks above exited with a non-zero exit code, the test will fail.
