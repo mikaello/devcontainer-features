@@ -1,78 +1,46 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
 echo "Activating feature 'modern-shell-utils'"
 
-# Clean up
-rm -rf /var/lib/apt/lists/*
-
-echo "Step 1, check if user is root"
+echo "Step 1, check for root privileges"
 if [ "$(id -u)" -ne 0 ]; then
-    echo -e 'Script must be run as root. Use sudo, su, or add "USER root" to your Dockerfile before running this script.'
+    echo "This feature must be installed as root." >&2
     exit 1
 fi
 
-echo "Step 2, determine appropriate non-root user"
-if [ "${USERNAME}" = "auto" ] || [ "${USERNAME}" = "automatic" ]; then
-    USERNAME=""
-    POSSIBLE_USERS=("vscode" "node" "codespace" "$(awk -v val=1000 -F ":" '$3==val{print $1}' /etc/passwd)")
-    for CURRENT_USER in "${POSSIBLE_USERS[@]}"; do
-        if id -u "${CURRENT_USER}" >/dev/null 2>&1; then
-            USERNAME=${CURRENT_USER}
-            break
-        fi
-    done
-    if [ "${USERNAME}" = "" ]; then
-        USERNAME=root
-    fi
-elif [ "${USERNAME}" = "none" ] || ! id -u ${USERNAME} >/dev/null 2>&1; then
-    USERNAME=root
+echo "Step 2, check the distribution"
+. /etc/os-release
+if ! { [[ "${ID}" == "debian" ]] && dpkg --compare-versions "${VERSION_ID}" ge 13; } &&
+   ! { [[ "${ID}" == "ubuntu" ]] && dpkg --compare-versions "${VERSION_ID}" ge 24.04; }; then
+    echo "Unsupported distribution: ${PRETTY_NAME}. This feature requires Debian 13+ or Ubuntu 24.04+." >&2
+    exit 1
 fi
-
-echo "Step 3, define helper functions"
-apt_get_update()
-{
-    if [ "$(find /var/lib/apt/lists/* | wc -l)" = "0" ]; then
-        echo "Running apt-get update..."
-        apt-get update -y
-    fi
-}
-
-# Checks if packages are installed and installs them if not
-check_packages() {
-    if ! dpkg -s "$@" > /dev/null 2>&1; then
-        apt_get_update
-        apt-get -y install --no-install-recommends "$@"
-    fi
-}
 
 export DEBIAN_FRONTEND=noninteractive
+echo "Step 3, refresh package indexes"
+rm -rf /var/lib/apt/lists/*
+apt-get update -y
 
-echo "Step 4, check if architecture is supported"
-architecture="$(uname -m)"
-if [ "${architecture}" != "amd64" ] && [ "${architecture}" != "x86_64" ] && [ "${architecture}" != "arm64" ] && [ "${architecture}" != "aarch64" ]; then
-    echo "(!) Architecture $architecture unsupported"
+if ! apt-cache show eza >/dev/null 2>&1; then
+    echo "eza is unavailable from the configured APT sources. Enable the distribution's eza package repository." >&2
     exit 1
 fi
 
+echo "Step 4, install eza, fd, ripgrep, and bat"
+apt-get install -y --no-install-recommends eza fd-find ripgrep bat
 
-echo "Step 4.5, add apt repo deb.gierens.de to get 'eza'. To be removed when 'eza' is available in mainstream repo"
-check_packages ca-certificates gpg wget
-mkdir -p /etc/apt/keyrings
-wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
-echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | tee /etc/apt/sources.list.d/gierens.list
-chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
-apt-get update -y
+echo "Step 5, expose fd, bat, and ag commands"
+if ! command -v fd >/dev/null 2>&1; then
+    ln -sfn /usr/bin/fdfind /usr/local/bin/fd
+fi
+if ! command -v bat >/dev/null 2>&1; then
+    ln -sfn /usr/bin/batcat /usr/local/bin/bat
+fi
+if ! command -v ag >/dev/null 2>&1; then
+    ln -sfn /usr/bin/rg /usr/local/bin/ag
+fi
 
-
-echo "Step 5, install packages"
-check_packages eza fd-find silversearcher-ag bat
-
-ln -s /usr/bin/fdfind /usr/local/bin/fd
-ln -s /usr/bin/batcat /usr/local/bin/bat
-
-
-# Clean up
+echo "Step 6, clean up"
 rm -rf /var/lib/apt/lists/*
-
 echo "Done!"

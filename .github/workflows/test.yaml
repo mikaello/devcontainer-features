@@ -16,8 +16,8 @@ jobs:
           - kotlinc
           - modern-shell-utils
         baseImage:
-          - debian:latest
-          - ubuntu:latest
+          - debian:13
+          - ubuntu:24.04
           - mcr.microsoft.com/devcontainers/base:ubuntu
     steps:
       - uses: actions/checkout@v7

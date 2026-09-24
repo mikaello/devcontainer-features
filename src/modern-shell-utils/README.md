@@ -1,23 +1,23 @@
 
 # Modern shell utils (modern-shell-utils)
 
-A collection of modern shell utils
+eza, fd, ripgrep, and bat for Debian 13+ and Ubuntu 24.04+
 
 ## Example Usage
 
 ```json
 "features": {
-    "ghcr.io/mikaello/devcontainer-features/modern-shell-utils:2": {}
+    "ghcr.io/mikaello/devcontainer-features/modern-shell-utils:3": {}
 }
 ```
 
-## Options
+# modern-shell-utils v3
 
-| Options Id | Description | Type | Default Value |
-|-----|-----|-----|-----|
+Replaced The Silver Searcher with the maintained `rg` from ripgrep.
+An `ag` command points to `rg` for simple searches; some flags and output differ.
+Requires Debian 13+ or Ubuntu 24.04+ with the distribution's `eza` package available.
 
-
-# modern-shell-utils v2 
+## Previous changes
 
 Replaced [`exa`](https://github.com/ogham/exa) with [`eza`](https://github.com/eza-community/eza) due to `exa` being deprecated.
 

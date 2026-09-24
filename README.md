@@ -11,9 +11,11 @@ Install the modern shell utilities:
 
 - [eza](https://eza.rocks/), _ls_ alternative (previously [exa](https://github.com/ogham/exa) was bundled)
 - [fd](https://github.com/sharkdp/fd), _find_ alternative
-- [ag (The Silver Searcher)](https://github.com/ggreer/the_silver_searcher),
-  _grep_ alternative
+- [ripgrep](https://github.com/BurntSushi/ripgrep), _grep_ alternative
 - [bat](https://github.com/sharkdp/bat), _cat_ alternative
+
+`ag` remains available as a compatibility command for basic searches and runs `rg`.
+Some `ag` options behave differently.
 
 ### [`kotlinc`](src/kotlinc/README.md)
 
