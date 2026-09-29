@@ -11,6 +11,8 @@ eza, fd, ripgrep, and bat for Debian 13+ and Ubuntu 24.04+
 }
 ```
 
+
+
 # modern-shell-utils v3
 
 Replaced The Silver Searcher with the maintained `rg` from ripgrep.
